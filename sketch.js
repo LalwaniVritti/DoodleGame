@@ -9,6 +9,7 @@ var ground, invisibleGround;
 var platform1,platform2,platform3,platform4,platform5,platform6;
 
 var platformGroup;
+var p, pImage;
 
 
 var score=0;
@@ -18,7 +19,8 @@ var gameOver, restart;
 
 function preload(){
   
-  doodleImage=loadImage("images/jack2.png")
+  doodleImage=loadImage("images/jack2.png");
+  pImage = loadImage("images/platform.png");
   
   platform1 = loadImage("images/platform1.png");
   platform2 = loadImage("images/platform2.png");
@@ -38,13 +40,17 @@ function preload(){
 function setup() {
   createCanvas(500, 600);
   
-  doodle = createSprite(250,250,20,50);
+  doodle = createSprite(250,300,20,50);
   
   doodle.addImage(doodleImage);
   doodle.scale = 1;
   doodle.setCollider("circle",0,30,10);
-  doodle.debug=true
-  doodle.depth=10000
+  //doodle.debug=true;
+  doodle.depth=10000;
+  
+  p = createSprite(250,350);
+  p.addImage(pImage);
+  p.scale=0.5;
   
   gameOver = createSprite(250,250);
   gameOver.addImage(gameOverImg);
@@ -68,7 +74,7 @@ function draw() {
   text("Score: "+ score, 500,50);
   
   if (gameState===PLAY){
-    //doodle.collide(platformGroup)
+    doodle.collide(p)
     //score = score + Math.round(frameCount/100);
 
     // to restart the game frameCount can not be reset, so using frameRate
@@ -81,6 +87,7 @@ function draw() {
     }
     
     if(keyDown("space")) {
+      p.y=700;
       doodle.velocityY = -16;
        jumpSound.play();
       invisibleGround.velocityY=2
@@ -132,7 +139,9 @@ function draw() {
 }
 
 function reset(){
-  doodle.y=250;
+  doodle.x = 250;
+  doodle.y=300;
+  p.y=350;
   gameState = PLAY;
   platformGroup.destroyEach();
   score = 0;
